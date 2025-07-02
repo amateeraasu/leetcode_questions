@@ -1,4 +1,5 @@
 ==================================
+CHAPTER 1. 
 Revenue per customer
 You've been hired at Delivr as a data analyst! A customer just called Delivr's Customer Support team;
 she wants to double-check whether her receipts add up. Going by her receipts, she calculated that her total bill on Delivr is $271, 
@@ -179,3 +180,52 @@ SELECT r.delivr_month, r.revenue,c.cost, r.revenue - c.cost AS profit
 FROM revenue r
 JOIN cost c
 ON r.delivr_month = c.delivr_month
+
+==========================================
+CHAPTER 2. 
+
+Registrations by month
+Usually, registration dates are stored in a table containing users' metadata. 
+However, Delivr only considers a user registered if that user has ordered at least once. 
+A Delivr user's registration date is the date of that user's first order.
+
+Bob, the Investment Relations Manager at Delivr, is preparing a pitch deck for a meeting with potential investors.
+He wants to add a line chart of registrations by month to highlight Delivr's success in gaining new users.
+
+Send Bob a table of registrations by month.
+
+1. Return a table of user IDs and their registration dates.
+Order by user_id in ascending order.
+
+
+SELECT DISTINCT user_id, MIN(order_date) as reg_date
+FROM orders 
+GROUP BY user_id 
+ORDER BY user_id 
+
+2. Wrap the query you just wrote in a CTE named reg_dates.
+Using reg_dates, return a table of registrations by month.
+
+WITH reg_dates AS( 
+  SELECT DISTINCT user_id, MIN(order_date) as reg_date
+  FROM orders 
+  GROUP BY user_id
+  ORDER BY user_id
+)
+
+SELECT DATE_TRUNC('month', reg_date):: Date as delivr_month, 
+        COUNT(DISTINCT user_id) as regs
+FROM reg_dates
+GROUP BY delivr_month
+ORDER BY delivr_month;
+
+==========================================
+Monthly active users (MAU)
+Bob predicts that the investors won't be satisfied with only registrations by month. 
+They will want to know how many users actually used Delivr as well. He's decided to include another line chart of Delivr's monthly active users (MAU); 
+he's asked you to send him a table of monthly active users.
+
+
+
+
+
