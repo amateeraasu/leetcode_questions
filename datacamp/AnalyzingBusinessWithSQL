@@ -225,6 +225,15 @@ Bob predicts that the investors won't be satisfied with only registrations by mo
 They will want to know how many users actually used Delivr as well. He's decided to include another line chart of Delivr's monthly active users (MAU); 
 he's asked you to send him a table of monthly active users.
 
+Select the month by truncating the order dates.
+Calculate MAU by counting the users for every month.
+Order by month in ascending order.
+
+SELECT DATE_TRUNC('month', order_date ):: Date as delivr_month, 
+  COUNT(DISTINCT user_id) as MAU
+FROM orders 
+GROUP BY delivr_month
+ORDER BY delivr_month;
 
 
 
