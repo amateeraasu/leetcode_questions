@@ -370,3 +370,312 @@ engine = create_engine('sqlite:///Chinook.sqlite')
 df = pd.read_sql_query("SELECT * FROM Album", engine)
 
 
+################## Importing flat files from the web
+
+
+# Import package
+from urllib.request import urlretrieve
+
+# Import pandas
+import pandas as pd
+
+# Assign url of file: url
+url = 'https://assets.datacamp.com/production/course_1606/datasets/winequality-red.csv'
+
+# Save file locally
+urlretrieve(url, 'winequality-red.csv')
+
+# Read file into a DataFrame and print its head
+df = pd.read_csv('winequality-red.csv', sep=';')
+print(df.head())
+
+
+############  Read_CSV from URL
+
+# Import packages
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assign url of file: url
+url = 'https://assets.datacamp.com/production/course_1606/datasets/winequality-red.csv'
+
+# Read file into a DataFrame: df
+df = pd.read_csv(url, sep=';')
+
+# Print the head of the DataFrame
+print(df)
+
+# Plot first column of df
+df.iloc[:, 0].hist()
+plt.xlabel('fixed acidity (g(tartaric acid)/dm$^3$)')
+plt.ylabel('count')
+plt.show()
+
+
+############### Importing EXCEL from URL
+
+
+import pandas as pd
+
+url  = 'https://assets.datacamp.com/course/importing_data_into_r/latitude.xls'
+
+xls = pd.read_excel(url, sheet_name=None)
+
+print(xls.keys())
+
+print(xls['1700'].head())
+
+################ Performing HTTP requests in Python using urllib
+
+# Import packages
+from urllib.request import urlopen, Request
+
+# Specify the url
+url = "https://campus.datacamp.com/courses/1606/4135?ex=2"
+
+# This packages the request: request
+request = Request("https://campus.datacamp.com/courses/1606/4135?ex=2")
+
+# Sends the request and catches the response: response
+response = urlopen(request)
+
+# Print the datatype of response
+print(type(response))
+
+# Be polite and close the response!
+response.close()
+
+
+################## Print HTML
+
+from urllib.request import urlopen, Request
+
+url = "https://campus.datacamp.com/courses/1606/4135?ex=2"
+
+request = Request(url)
+
+response = urlopen(request)
+
+html = response.read()
+
+print(html)
+
+response.close()
+
+
+
+###################  Performing HTTP requests in Python using requests
+
+import requests 
+
+url = "http://www.datacamp.com/teach/documentation"
+
+r = requests.get(url)
+
+text = r.text
+
+print(text)
+
+################## HTML with BeautifulSoup
+
+# Import packages
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://www.python.org/~guido/'
+
+r = requests.get(url)
+
+html_doc = r.text
+
+soup = BeautifulSoup(html_doc)
+
+pretty_soup = soup.prettify()
+
+print(pretty_soup)
+
+#################### Turning a webpage into data using BeautifulSoup: getting the text
+
+
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://www.python.org/~guido/'
+
+r = requests.get(url)
+
+html_doc = r.text
+
+soup = BeautifulSoup(html_doc)
+
+guido_title = soup.title
+
+print(guido_title)
+
+guido_text = soup.get_text()
+
+print(guido_text)
+
+
+###################### Turning a webpage into data using BeautifulSoup: getting the hyperlinks
+
+# Import packages
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://www.python.org/~guido/'
+
+r = requests.get(url)
+
+html_doc = r.text
+
+soup = BeautifulSoup(html_doc)
+
+print(soup.title)
+
+a_tags = soup.find_all("a")
+
+for link in a_tags:
+    print(link.get('href'))
+
+
+#################### Loading and exploring a JSON
+
+# Load JSON: json_data
+with open("a_movie.json") as json_file:
+    json_data = json.load(json_file)
+
+for k in json_data.keys():
+    print(k + ': ', json_data[k])
+
+
+#####################
+
+with open('a_movie.json') as json_file:
+    json_data = json.load(json_file)
+print(json_data['Title'], json_data['Year'])
+
+###################### API requests
+
+import requests
+
+url = 'http://www.omdbapi.com/?apikey=72bc447a&t=the+social+network'
+
+r = requests.get(url)
+
+print(r.text)
+
+######################## JSON–from the web to Python
+
+import requests
+
+url = 'http://www.omdbapi.com/?apikey=72bc447a&t=social+network'
+
+r = requests.get(url)
+
+json_data = r.json()
+
+for k in json_data.keys():
+    print(k + ': ', json_data[k])
+
+########################## Checking out the Wikipedia API
+
+import requests
+
+url = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=pizza'
+
+r = requests.get(url)
+
+json_data = r.json()
+
+pizza_extract = json_data['query']['pages']['24768']['extract']
+print(pizza_extract)
+
+######################### Streaming tweets
+
+# Store credentials in relevant variables
+consumer_key = "nZ6EA0FxZ293SxGNg8g8aP0HM"
+consumer_secret = "fJGEodwe3KiKUnsYJC3VRndj7jevVvXbK2D5EiJ2nehafRgA6i"
+access_token = "1092294848-aHN7DcRP9B4VMTQIhwqOYiB14YkW92fFO8k8EPy"
+access_token_secret = "X4dHmhPfaksHcQ7SCbmZa2oYBBVSD2g8uIHXsp5CTaksx"
+
+# Create your Stream object with credentials
+stream = tweepy.Stream(consumer_key, consumer_secret, access_token, access_token_secret)
+
+# Filter your Stream variable
+stream.filter(track=["clinton", "trump", "sanders", "cruz"])
+
+############################# Load and explore your Twitter data
+
+
+import json
+
+tweets_data_path = 'tweets.txt'
+
+tweets_data = []
+
+tweets_file = open(tweets_data_path, "r")
+
+for line in tweets_file:
+     tweet = json.loads(line)
+     tweets_data.append(tweet)
+
+tweets_file.close()
+
+print(tweets_data[0].keys())
+
+##############################  Twitter data to DataFrame
+
+# Import package
+import pandas as pd
+
+# Build DataFrame of tweet texts and languages
+df = pd.DataFrame(tweets_data, columns=['text', 'lang'])
+
+# Print head of DataFrame
+print(df.head())
+
+############################## A little bit of Twitter text analysis
+
+
+import re
+
+def word_in_text(word, text):
+    word = word.lower()
+    text = text.lower()
+    match = re.search(word, text)
+
+    if match:
+        return True
+    return False
+
+[clinton, trump, sanders, cruz] = [0, 0, 0, 0]
+
+
+for index, row in df.iterrows():
+    clinton += word_in_text('clinton', row['text'])
+    trump += word_in_text('trump', row['text'])
+    sanders += word_in_text('sanders', row['text'])
+    cruz += word_in_text('cruz', row['text'])
+
+######################## Vizualizing
+
+# Import packages
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# Set seaborn style
+sns.set(color_codes=True)
+
+# Create a list of labels:cd
+cd = ['clinton', 'trump', 'sanders', 'cruz']
+
+# Plot the bar chart
+ax = sns.barplot( cd, [clinton, trump, sanders, cruz])
+ax.set(ylabel="count")
+plt.show()
+
+###########################
+
+
